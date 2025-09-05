@@ -1,251 +1,143 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Random Stupid Facts</title>
-  <meta name="description" content="Click a topic and get random, very questionable facts. Fully static, GitHub Pages ready." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E🤪%3C/text%3E%3C/svg%3E">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Dumb Facts</title>
   <style>
-    :root{
-      --bg: #0b1020;
-      --card:#121931;
-      --muted:#9aa4bf;
-      --text:#e7ecff;
-      --brand:#7c9cff;
-      --accent:#22d3ee;
-      --ok:#10b981;
-      --warn:#f59e0b;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 18px;
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #f5f5f5;
+      text-align: center;
+      padding: 20px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      background: radial-gradient(1000px 600px at 80% -20%, rgba(124,156,255,.18), transparent 60%),
-                  radial-gradient(800px 500px at -10% 10%, rgba(34,211,238,.12), transparent 60%),
-                  var(--bg);
-      color:var(--text);
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
     }
-    header{max-width:1100px;margin:32px auto 12px;padding:0 20px;display:flex;gap:16px;align-items:center;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:14px;font-weight:800;letter-spacing:.2px}
-    .logo{width:40px;height:40px;display:grid;place-items:center;background:linear-gradient(145deg,var(--brand),var(--accent));border-radius:12px;box-shadow:var(--shadow)}
-    .logo span{font-size:22px}
-
-    .wrap{max-width:1100px;margin:0 auto;padding:0 20px 60px}
-
-    .layout{display:grid;grid-template-columns:300px 1fr;gap:20px}
-    @media (max-width: 900px){.layout{grid-template-columns:1fr}}
-
-    /* Sidebar */
-    .sidebar{position:sticky;top:12px;align-self:start;background:rgba(255,255,255,.02);backdrop-filter: blur(6px);
-      border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
-    .search{position:relative;margin-bottom:10px}
-    .search input{width:100%;padding:12px 12px 12px 42px;background:#0e1530;border:1px solid rgba(255,255,255,.08);border-radius:14px;color:var(--text)}
-    .search .icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.7}
-
-    .topics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .topic{padding:10px 12px;background:linear-gradient(180deg, #121a35, #0e1530);border:1px solid rgba(255,255,255,.08);border-radius:12px;
-      cursor:pointer;transition:transform .1s ease, border-color .2s;display:flex;align-items:center;gap:10px}
-    .topic:hover{transform:translateY(-2px) scale(1.02);border-color:rgba(124,156,255,.5)}
-    .topic.active{outline:2px solid rgba(124,156,255,.7)}
-
-    /* Main card */
-    .card{background:linear-gradient(180deg, rgba(18,25,49,.9), rgba(11,16,32,.9)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius);
-      padding:20px; box-shadow: var(--shadow)}
-    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:8px}
-    .btn{padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0e1530;color:var(--text);cursor:pointer;font-weight:700;transition:transform .1s ease}
-    .btn:hover{border-color:rgba(124,156,255,.6);transform:translateY(-1px)}
-    .btn.primary{background:linear-gradient(145deg, var(--brand), var(--accent)); border:none}
-    .btn.ghost{background:transparent}
-    .pill{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.1);font-size:12px;color:var(--muted)}
-
-    .facts{display:grid;gap:10px;margin-top:10px}
-    .fact{padding:14px;background:#0e1530;border:1px solid rgba(255,255,255,.08);border-radius:14px;line-height:1.4;position:relative;animation:pop .3s ease}
-    .kinda-true{position:absolute;right:10px;top:10px;font-size:11px;color:var(--muted)}
-
-    @keyframes pop { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
-
-    .empty{opacity:.7;color:var(--muted);padding:30px;text-align:center;border:1px dashed rgba(255,255,255,.15);border-radius:14px}
-
-    .toolbar{display:flex;gap:8px;margin-top:12px}
-
-    .footer{max-width:1100px;margin:24px auto 60px;padding:0 20px;color:var(--muted);font-size:14px;text-align:center}
+    .buttons button {
+      margin: 8px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.25s ease;
+      background: #333;
+      color: #fff;
+    }
+    .buttons button:hover {
+      transform: scale(1.08);
+      background: #444;
+    }
+    .buttons button.active {
+      background: #ff9800;
+      color: #000;
+      box-shadow: 0 0 12px #ff9800;
+    }
+    .fact {
+      margin: 14px auto;
+      padding: 14px;
+      background: #1e1e1e;
+      border-radius: 12px;
+      max-width: 600px;
+      font-size: 1.2rem;
+      opacity: 0;
+      transform: scale(0.95);
+      animation: popIn 0.4s forwards;
+    }
+    @keyframes popIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo"><span>🤪</span></div>
-      <div>
-        <div style="font-size: clamp(20px, 3vw, 28px);font-weight:800">Random Stupid Facts</div>
-        <small style="color:var(--muted)">Click a topic → receive highly questionable knowledge.</small>
-      </div>
-    </div>
-    <div>
-      <button class="btn" id="randomTopicBtn" title="Random topic">🎲 Random</button>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <div class="layout">
-      <aside class="sidebar">
-        <div class="search">
-          <span class="icon">🔎</span>
-          <input id="search" placeholder="Search topics…" autocomplete="off" />
-        </div>
-        <div id="topics" class="topics"></div>
-      </aside>
-
-      <section class="card">
-        <div class="controls">
-          <span class="pill" id="currentTopicPill">Pick a topic</span>
-          <button class="btn primary" id="oneBtn">One fact</button>
-          <button class="btn" id="fiveBtn">5 facts</button>
-          <button class="btn ghost" id="anotherBtn">Another</button>
-          <span class="pill">⚠️ Not necessarily true.</span>
-        </div>
-
-        <div id="facts" class="facts">
-          <div class="empty" id="emptyState">No facts yet. Choose a topic, then hit One fact or 5 facts.</div>
-        </div>
-
-        <div class="toolbar">
-          <button class="btn" id="copyBtn">📋 Copy</button>
-          <button class="btn" id="shareBtn">📤 Share</button>
-          <button class="btn" id="exportBtn">💾 Export</button>
-          <button class="btn" id="clearBtn">🧹 Clear</button>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <div class="footer">Made for fun 🤪 Add your nonsense, share with friends!</div>
+  <h1>🤯 Random Dumb Facts</h1>
+  <div class="buttons">
+    <button id="oneFact">1 Fact</button>
+    <button id="fiveFacts">5 Facts</button>
+    <button id="anotherFact">Another</button>
+  </div>
+  <div id="factContainer"></div>
 
   <script>
-  const topicsData = {
-    "Space": [
-      "The Moon is just Earth’s lost contact lens.",
-      "Stars are basically sky freckles.",
-      "Uranus was named after a prank gone too far.",
-      "Aliens ghosted Earth after reading Twitter.",
-      "The Milky Way is just cosmic spilled milk."
-    ],
-    "Animals": [
-      "Sharks have been around longer than trees—they’re basically ocean landlords.",
-      "Koalas sleep so much because reality has bad reviews.",
-      "Parrots invented podcasts.",
-      "Horses are just dogs with Wi‑Fi disabled.",
-      "Goldfish are memory champions—they just act humble."
-    ],
-    "Food": [
-      "Lasagna is pasta playing Tetris.",
-      "Popcorn is corn that learned pyrotechnics.",
-      "Donuts are bagels on vacation.",
-      "Hotdogs are meat USB sticks.",
-      "Fries are potato confetti."
-    ],
-    "Tech": [
-      "Printers run on dark magic and spite.",
-      "USB works only after being flipped 3 times.",
-      "404 errors are the internet saying ‘peek‑a‑boo’.",
-      "Autocorrect is passive‑aggressive spelling.",
-      "VR is just expensive daydreaming."
-    ],
-    "History": [
-      "The first emails were sent by carrier pigeon with USB sticks.",
-      "Cavemen were the original influencers—painting walls for clout.",
-      "The Cold War was basically global side‑eyeing.",
-      "The first map was just someone doodling ‘here be vibes’."
-    ],
-    "Weird Science": [
-      "Atoms are just tiny drama clubs.",
-      "Bananas are berries, strawberries are liars.",
-      "Your stomach replaces itself every few days like a bad roommate.",
-      "Sharks existed before trees, yet still haven’t written an album.",
-      "Water is wet because it pays rent on itself."
-    ],
-    "Dreams": [
-      "Dreams are your brain’s late‑night improv show.",
-      "Nightmares are basically horror movie trailers in 4D.",
-      "If you dream of falling, your brain just hit the gravity button.",
-      "Daydreams are brain commercials with bad scheduling."
-    ]
-  };
+    const factContainer = document.getElementById('factContainer');
+    const oneBtn = document.getElementById('oneFact');
+    const fiveBtn = document.getElementById('fiveFacts');
+    const anotherBtn = document.getElementById('anotherFact');
 
-  const el = sel => document.querySelector(sel);
-  const topicsEl = el('#topics');
-  const factsEl = el('#facts');
-  const emptyEl = el('#emptyState');
-  const pillEl = el('#currentTopicPill');
-  const searchEl = el('#search');
+    const categories = {
+      Animals: [
+        "Sharks existed before trees.",
+        "Sloths can hold their breath longer than dolphins.",
+        "Cows have best friends and get stressed when separated."
+      ],
+      Food: [
+        "Bananas are berries but strawberries aren’t.",
+        "Honey never spoils—archaeologists have eaten 3000-year-old honey.",
+        "Ketchup was once sold as medicine."
+      ],
+      Weird: [
+        "Wombat poop is cube-shaped.",
+        "Octopuses have three hearts.",
+        "There’s a species of jellyfish that is immortal."
+      ]
+    };
 
-  let state = { topic:null, lastBatch:[] };
+    function getRandomFact() {
+      const keys = Object.keys(categories);
+      const category = keys[Math.floor(Math.random() * keys.length)];
+      const factList = categories[category];
+      const fact = factList[Math.floor(Math.random() * factList.length)];
+      return `${fact}`;
+    }
 
-  function topicsList(){ return Object.keys(topicsData).sort(); }
-  function renderTopics(filter=''){
-    topicsEl.innerHTML='';
-    const list=topicsList().filter(t=>t.toLowerCase().includes(filter.toLowerCase()));
-    if(list.length===0){ topicsEl.innerHTML='<div class="empty">No topics found.</div>'; return; }
-    list.forEach(t=>{
-      const btn=document.createElement('button');
-      btn.className='topic';
-      btn.innerHTML=`<span>${pickEmoji(t)}</span><span>${t}</span>`;
-      btn.onclick=()=>selectTopic(t,btn);
-      topicsEl.appendChild(btn);
+    function showFacts(count) {
+      factContainer.innerHTML = ""; // clear old facts
+      for (let i = 0; i < count; i++) {
+        const factEl = document.createElement('div');
+        factEl.className = 'fact';
+        factEl.textContent = getRandomFact();
+        factContainer.appendChild(factEl);
+      }
+    }
+
+    function setActive(button) {
+      [oneBtn, fiveBtn, anotherBtn].forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+    }
+
+    oneBtn.addEventListener('click', () => {
+      showFacts(1);
+      setActive(oneBtn);
     });
-    markActive();
-  }
-  function pickEmoji(t){
-    const map={Space:'🪐',Animals:'🐙',Food:'🌮',Tech:'💾',History:'🏰','Weird Science':'🧪',Dreams:'💤'};
-    return map[t]||'✨';
-  }
-  function selectTopic(t,btn){
-    state.topic=t; pillEl.textContent=t; state.lastBatch=[]; factsEl.innerHTML=''; emptyEl.style.display='none'; markActive(btn);
-  }
-  function markActive(btn){ document.querySelectorAll('.topic').forEach(b=>b.classList.remove('active')); if(btn)btn.classList.add('active'); }
-  function randomFacts(t,n){ const pool=topicsData[t]||[]; return [...pool].sort(()=>.5-Math.random()).slice(0,n); }
-  function showFacts(list){
-    if(!list.length){ factsEl.innerHTML='<div class="empty">No facts yet.</div>'; return; }
-    const frag=document.createDocumentFragment();
-    list.forEach(f=>{ const d=document.createElement('div'); d.className='fact'; d.innerHTML=f+" <span class='kinda-true'>~ kinda true? ~</span>"; frag.appendChild(d); });
-    factsEl.appendChild(frag);
-  }
 
-  // Controls
-  el('#oneBtn').onclick=()=>{ if(!state.topic)return alert('Pick topic'); const l=randomFacts(state.topic,1); state.lastBatch=l; showFacts(l); };
-  el('#fiveBtn').onclick=()=>{ if(!state.topic)return alert('Pick topic'); const l=randomFacts(state.topic,5); state.lastBatch=l; showFacts(l); };
-  el('#anotherBtn').onclick=()=>{ if(!state.topic)return alert('Pick topic'); factsEl.innerHTML=''; const l=randomFacts(state.topic,state.lastBatch.length||1); state.lastBatch=l; showFacts(l); };
+    fiveBtn.addEventListener('click', () => {
+      showFacts(5);
+      setActive(fiveBtn);
+    });
 
-  el('#copyBtn').onclick=()=>{
-    const text=[...document.querySelectorAll('.fact')].map(n=>n.textContent.replace('~ kinda true? ~','')).join('\n');
-    if(!text)return alert('Nothing to copy');
-    navigator.clipboard.writeText(text);
-    alert('Copied!');
-  };
+    anotherBtn.addEventListener('click', () => {
+      showFacts(1);
+      setActive(anotherBtn);
+    });
 
-  el('#shareBtn').onclick=()=>{
-    const text=[...document.querySelectorAll('.fact')].map(n=>`• ${n.textContent.replace('~ kinda true? ~','')}`).join('\n');
-    if(navigator.share)navigator.share({title:'Random Stupid Facts',text}); else alert(text);
-  };
+    // spacebar shortcut for another fact
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        showFacts(1);
+        setActive(anotherBtn);
+      }
+    });
 
-  el('#exportBtn').onclick=()=>{
-    const text=[...document.querySelectorAll('.fact')].map(n=>n.textContent).join('\n');
-    if(!text)return alert('Nothing to export');
-    const blob=new Blob([text],{type:'text/plain'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='facts.txt'; a.click();
-  };
-
-  el('#clearBtn').onclick=()=>{ factsEl.innerHTML=''; state.lastBatch=[]; emptyEl.style.display=''; };
-
-  el('#search').oninput=()=>renderTopics(searchEl.value);
-  el('#randomTopicBtn').onclick=()=>{ const list=topicsList(); selectTopic(list[Math.floor(Math.random()*list.length)]); };
-
-  // Keyboard shortcut (space = another fact)
-  document.body.onkeyup=(e)=>{ if(e.code==='Space'){ el('#anotherBtn').click(); } };
-
-  renderTopics();
+    // default load
+    showFacts(1);
+    setActive(oneBtn);
   </script>
 </body>
 </html>
