@@ -22,7 +22,7 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
       background: radial-gradient(1000px 600px at 80% -20%, rgba(124,156,255,.18), transparent 60%),
                   radial-gradient(800px 500px at -10% 10%, rgba(34,211,238,.12), transparent 60%),
                   var(--bg);
@@ -32,8 +32,6 @@
     .brand{display:flex;align-items:center;gap:14px;font-weight:800;letter-spacing:.2px}
     .logo{width:40px;height:40px;display:grid;place-items:center;background:linear-gradient(145deg,var(--brand),var(--accent));border-radius:12px;box-shadow:var(--shadow)}
     .logo span{font-size:22px}
-    .title{line-height:1.05}
-    .title small{display:block;font-weight:600;color:var(--muted)}
 
     .wrap{max-width:1100px;margin:0 auto;padding:0 20px 60px}
 
@@ -49,49 +47,44 @@
 
     .topics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .topic{padding:10px 12px;background:linear-gradient(180deg, #121a35, #0e1530);border:1px solid rgba(255,255,255,.08);border-radius:12px;
-      cursor:pointer;transition:transform .04s ease, border-color .2s;display:flex;align-items:center;gap:10px}
-    .topic:hover{transform:translateY(-1px);border-color:rgba(124,156,255,.5)}
+      cursor:pointer;transition:transform .1s ease, border-color .2s;display:flex;align-items:center;gap:10px}
+    .topic:hover{transform:translateY(-2px) scale(1.02);border-color:rgba(124,156,255,.5)}
     .topic.active{outline:2px solid rgba(124,156,255,.7)}
-    .topic .emoji{font-size:18px}
 
     /* Main card */
     .card{background:linear-gradient(180deg, rgba(18,25,49,.9), rgba(11,16,32,.9)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius);
       padding:20px; box-shadow: var(--shadow)}
     .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:8px}
-    .btn{padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0e1530;color:var(--text);cursor:pointer;font-weight:700}
-    .btn:hover{border-color:rgba(124,156,255,.6)}
+    .btn{padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0e1530;color:var(--text);cursor:pointer;font-weight:700;transition:transform .1s ease}
+    .btn:hover{border-color:rgba(124,156,255,.6);transform:translateY(-1px)}
     .btn.primary{background:linear-gradient(145deg, var(--brand), var(--accent)); border:none}
     .btn.ghost{background:transparent}
     .pill{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.1);font-size:12px;color:var(--muted)}
 
     .facts{display:grid;gap:10px;margin-top:10px}
-    .fact{padding:14px 14px;background:#0e1530;border:1px solid rgba(255,255,255,.08);border-radius:14px;line-height:1.4;position:relative}
+    .fact{padding:14px;background:#0e1530;border:1px solid rgba(255,255,255,.08);border-radius:14px;line-height:1.4;position:relative;animation:pop .3s ease}
     .kinda-true{position:absolute;right:10px;top:10px;font-size:11px;color:var(--muted)}
+
+    @keyframes pop { from{opacity:0;transform:scale(.9)} to{opacity:1;transform:scale(1)} }
 
     .empty{opacity:.7;color:var(--muted);padding:30px;text-align:center;border:1px dashed rgba(255,255,255,.15);border-radius:14px}
 
     .toolbar{display:flex;gap:8px;margin-top:12px}
 
-    .footer{max-width:1100px;margin:24px auto 60px;padding:0 20px;color:var(--muted);font-size:14px}
-    .switch{display:inline-flex;gap:8px;align-items:center}
-    .toggle{width:56px;height:32px;border-radius:999px;background:#0e1530;border:1px solid rgba(255,255,255,.08);position:relative;cursor:pointer}
-    .ball{width:24px;height:24px;border-radius:50%;background:linear-gradient(145deg,#fff,#c9d3ff);position:absolute;top:3px;left:3px;transition:left .2s}
-    body.light{--bg:#f5f7ff;--card:#ffffff;--text:#0b1020;--muted:#53607a;--shadow:0 12px 28px rgba(36,50,120,.15)}
-    body.light .ball{left:29px;background:linear-gradient(145deg,#0b1020,#334155)}
+    .footer{max-width:1100px;margin:24px auto 60px;padding:0 20px;color:var(--muted);font-size:14px;text-align:center}
   </style>
 </head>
 <body>
   <header>
     <div class="brand">
-      <div class="logo" aria-hidden="true"><span>🤪</span></div>
-      <div class="title">
-        <div style="font-size: clamp(20px, 3vw, 28px)">Random Stupid Facts</div>
-        <small>Click a topic → receive highly questionable knowledge.</small>
+      <div class="logo"><span>🤪</span></div>
+      <div>
+        <div style="font-size: clamp(20px, 3vw, 28px);font-weight:800">Random Stupid Facts</div>
+        <small style="color:var(--muted)">Click a topic → receive highly questionable knowledge.</small>
       </div>
     </div>
-    <div class="switch" title="Toggle light/dark">
-      <span>🌓</span>
-      <div class="toggle" id="toggleTheme" role="button" aria-label="Toggle theme"><div class="ball"></div></div>
+    <div>
+      <button class="btn" id="randomTopicBtn" title="Random topic">🎲 Random</button>
     </div>
   </header>
 
@@ -102,7 +95,7 @@
           <span class="icon">🔎</span>
           <input id="search" placeholder="Search topics…" autocomplete="off" />
         </div>
-        <div id="topics" class="topics" aria-live="polite"></div>
+        <div id="topics" class="topics"></div>
       </aside>
 
       <section class="card">
@@ -111,7 +104,7 @@
           <button class="btn primary" id="oneBtn">One fact</button>
           <button class="btn" id="fiveBtn">5 facts</button>
           <button class="btn ghost" id="anotherBtn">Another</button>
-          <span class="pill">Not necessarily true.</span>
+          <span class="pill">⚠️ Not necessarily true.</span>
         </div>
 
         <div id="facts" class="facts">
@@ -119,201 +112,65 @@
         </div>
 
         <div class="toolbar">
-          <button class="btn" id="copyBtn" title="Copy facts to clipboard">Copy</button>
-          <button class="btn" id="shareBtn" title="Share via native share">Share</button>
-          <button class="btn" id="clearBtn" title="Clear facts">Clear</button>
+          <button class="btn" id="copyBtn">📋 Copy</button>
+          <button class="btn" id="shareBtn">📤 Share</button>
+          <button class="btn" id="exportBtn">💾 Export</button>
+          <button class="btn" id="clearBtn">🧹 Clear</button>
         </div>
-
-        <details style="margin-top:14px">
-          <summary style="cursor:pointer">➕ Add your own facts</summary>
-          <form id="customForm" style="display:grid;gap:8px;margin-top:8px">
-            <label>Topic
-              <input id="customTopic" placeholder="e.g., Sandwiches" required style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0e1530;color:var(--text)">
-            </label>
-            <label>Fact
-              <textarea id="customFact" placeholder="Write your extremely dubious fact here" rows="3" required style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0e1530;color:var(--text)"></textarea>
-            </label>
-            <button class="btn" type="submit">Save fact</button>
-            <small class="pill">(Saved locally in your browser.)</small>
-          </form>
-        </details>
       </section>
     </div>
   </main>
 
-  <div class="footer">
-    Inspired by Gzao_pogs. Created by iris.
-  </div>
+  <div class="footer">Made for fun 🤪 Add your nonsense, share with friends!</div>
 
   <script>
   const topicsData = {
     "Space": [
       "The Moon is just Earth’s lost contact lens.",
-      "Saturn’s rings are a giant vinyl record stuck on loop.",
-      "Astronauts bring space-plant babysitters so stars don’t get lonely.",
-      "Black holes are cosmic ‘Do Not Disturb’ signs for light.",
-      "Mars banned umbrellas after a dust storm unionized.",
-      "Comets are snowballs with fabulous tails and no sense of direction.",
-      "The ISS is basically the world’s most expensive bunk bed.",
-      "Pluto identifies as a ‘vibe’, not a planet.",
-      "Jupiter’s Great Red Spot is just angry weather doing cardio.",
-      "Every galaxy has a favorite karaoke song. Ours is static noise."
+      "Stars are basically sky freckles.",
+      "Uranus was named after a prank gone too far.",
+      "Aliens ghosted Earth after reading Twitter.",
+      "The Milky Way is just cosmic spilled milk."
     ],
     "Animals": [
-      "Penguins wear tuxedos because every day is prom in Antarctica.",
-      "Giraffes invented periscopes but forgot to patent them.",
-      "Sloths move slowly to avoid late fees.",
-      "Octopuses change color when they remember an embarrassing moment.",
-      "Ducks quack in regional accents depending on bread quality.",
-      "Cats walk on keyboards to file their taxes.",
-      "Bees gossip about flowers like food critics with wings.",
-      "Elephants never forget where they hid the TV remote.",
-      "Cows practice moo-sic at sunset.",
-      "Owls rotate their heads to spot drama from every angle."
-    ],
-    "History": [
-      "Ancient Romans used Wi‑Fi, but it only connected to grapes.",
-      "Medieval castles installed drawbridges to keep out door-to-door dragons.",
-      "The Renaissance began when someone found the ‘refresh’ button on art.",
-      "Pharaohs invented eyeliner; cats invented the attitude.",
-      "Vikings wore horned helmets only when calling customer service.",
-      "Cavemen discovered fire while trying to toast ice cream.",
-      "The first wheel was square because circles were still loading.",
-      "Time zones were invented so sundials could take breaks.",
-      "Napoleon was actually tall; everyone else was just crouching.",
-      "The printing press started spam mail in 1450."
+      "Sharks have been around longer than trees—they’re basically ocean landlords.",
+      "Koalas sleep so much because reality has bad reviews.",
+      "Parrots invented podcasts.",
+      "Horses are just dogs with Wi‑Fi disabled.",
+      "Goldfish are memory champions—they just act humble."
     ],
     "Food": [
-      "Pineapples are just pinecones that went to the spa.",
-      "Spaghetti is yarn that believed in itself.",
-      "Avocados pay extra for toast real estate.",
-      "Cheese is milk’s retirement plan.",
-      "Cereal is soup that woke up early.",
-      "Tacos are edible envelopes for good news.",
-      "Coffee is bean juice with personality.",
-      "Cupcakes are muffins wearing party hats.",
-      "Pickles are cucumbers that survived plot twists.",
-      "Watermelons are 92% summer."
+      "Lasagna is pasta playing Tetris.",
+      "Popcorn is corn that learned pyrotechnics.",
+      "Donuts are bagels on vacation.",
+      "Hotdogs are meat USB sticks.",
+      "Fries are potato confetti."
     ],
     "Tech": [
-      "Wi‑Fi works faster if you compliment it.",
-      "Smartphones are tiny rectangles full of other people’s opinions.",
-      "AI stands for ‘Actually, Interesting’. Sometimes.",
-      "Bluetooth was named after a Viking who loved mouthwash.",
-      "Cloud storage is where files go to learn levitation.",
-      "Laptops sleep so they can dream in spreadsheets.",
-      "Keyboards are just piano lessons with deadlines.",
-      "3D printers sneeze out reality.",
-      "Charging cables tangle to practice knot-ology.",
-      "Robots blink in binary when nervous."
+      "Printers run on dark magic and spite.",
+      "USB works only after being flipped 3 times.",
+      "404 errors are the internet saying ‘peek‑a‑boo’.",
+      "Autocorrect is passive‑aggressive spelling.",
+      "VR is just expensive daydreaming."
     ],
-    "Weather": [
-      "Rain is the sky’s way of hydrating sidewalks.",
-      "Snowflakes are winter’s confetti—party requires coats.",
-      "Thunder is clouds bowling with invisible shoes.",
-      "Fog is low‑resolution atmosphere.",
-      "Hail is ice with commitment issues.",
-      "Rainbows are sky stickers for good behavior.",
-      "Wind is air doing cardio.",
-      "Humidity is the air wearing a damp sweater.",
-      "Lightning is sky Wi‑Fi looking for ground.",
-      "Sunshine is star juice on easy mode."
+    "History": [
+      "The first emails were sent by carrier pigeon with USB sticks.",
+      "Cavemen were the original influencers—painting walls for clout.",
+      "The Cold War was basically global side‑eyeing.",
+      "The first map was just someone doodling ‘here be vibes’."
     ],
-    "Art": [
-      "Sculptures are rocks that went to finishing school.",
-      "Paintings are windows that don’t pay property tax.",
-      "Museums are quiet because the art is concentrating.",
-      "Abstract art is just shapes on vacation.",
-      "Graffiti is wall handwriting with confidence.",
-      "Brushes are hair that got into design school.",
-      "Clay is dirt with aspirations.",
-      "Photo frames are rectangles seeking attention.",
-      "Sketchbooks are diaries that refuse to spell.",
-      "Art critics grade colors on vibes."
+    "Weird Science": [
+      "Atoms are just tiny drama clubs.",
+      "Bananas are berries, strawberries are liars.",
+      "Your stomach replaces itself every few days like a bad roommate.",
+      "Sharks existed before trees, yet still haven’t written an album.",
+      "Water is wet because it pays rent on itself."
     ],
-    "Music": [
-      "Triangles joined bands because they love angles.",
-      "Pianos are furniture that learned to sing.",
-      "Drummers count to four because five ran away.",
-      "Opera is cosplay for voices.",
-      "Flutes are metal straws with diplomas.",
-      "Guitars have strings attached to everything.",
-      "Bassists move air so you can feel the plot.",
-      "Saxophones are brass noodles.",
-      "Choirs are group projects that actually work.",
-      "Earworms are songs hunting for apartments."
-    ],
-    "Sports": [
-      "Soccer is chess for feet.",
-      "Basketball is just organized jumping with a soundtrack.",
-      "Tennis invented polite arguments.",
-      "Baseball is an excuse to eat a hotdog slowly.",
-      "Swimming is stylish not-drowning.",
-      "Cycling is running with sit-down privileges.",
-      "Golf is hiking with smaller goals.",
-      "Hockey is ice arguing with sticks.",
-      "Volleyball is gravity fan service.",
-      "Table tennis is lightning trapped in a garage."
-    ],
-    "Geography": [
-      "Mountains are Earth’s dramatic cheekbones.",
-      "Deserts are beaches that forgot the ocean.",
-      "Rivers are nature’s cursive.",
-      "Islands are mountains practicing independence.",
-      "Valleys are where echoes go shopping.",
-      "Lakes are puddles with tenure.",
-      "Forests are tree neighborhoods.",
-      "Caves are Earth’s pockets.",
-      "Volcanoes are spicy hills.",
-      "Oceans are soup too big for spoons."
-    ],
-    "Inventions": [
-      "Light bulbs are ideas that hired electricity.",
-      "The wheel was version 0.1 of donuts.",
-      "Velcro is nature’s tiny high‑five.",
-      "Kites are legalized sky fishing.",
-      "Umbrellas are portable ceilings.",
-      "Microwaves are food saunas.",
-      "Staplers are paper hugs with commitment.",
-      "Scissors are two knives in a healthy relationship.",
-      "Clocks are time’s drum machines.",
-      "Zippers are tiny rollercoasters."
-    ],
-    "Literature": [
-      "Libraries are book hotels.",
-      "Poetry is language doing yoga.",
-      "Novels are long text messages from imaginary friends.",
-      "Bookmarks are pause buttons for brains.",
-      "Mysteries are plot hide‑and‑seek.",
-      "Dictionaries are word zoos.",
-      "Comics are pictures that learned verbs.",
-      "Plays are rehearsed eavesdropping.",
-      "Footnotes are academic whispers.",
-      "Epics are stories that refused to end."
-    ],
-    "Gaming": [
-      "Loading screens are meditation with progress bars.",
-      "Boss fights are job interviews with swords.",
-      "NPCs stand still because their contracts say so.",
-      "Speedrunners are time’s personal trainers.",
-      "Loot boxes are surprise piñatas for pixels.",
-      "RPGs are spreadsheets with capes.",
-      "Mini‑maps are GPS for attention spans.",
-      "Achievements are merit badges for thumbs.",
-      "Patch notes are apologies in bullet points.",
-      "Glitches are features exploring freedom."
-    ],
-    "Fashion": [
-      "Pockets are tiny apartments for lint.",
-      "Hoodies are wearable comfort zones.",
-      "Runways are sidewalks with paparazzi.",
-      "Sneakers are shoes on casual Friday.",
-      "Belts are waist consultants.",
-      "Buttons are polite zippers.",
-      "Socks are foot mittens.",
-      "Hats are head roofs.",
-      "Scarves are portable hugs.",
-      "Jeans are denim chores."
+    "Dreams": [
+      "Dreams are your brain’s late‑night improv show.",
+      "Nightmares are basically horror movie trailers in 4D.",
+      "If you dream of falling, your brain just hit the gravity button.",
+      "Daydreams are brain commercials with bad scheduling."
     ]
   };
 
@@ -324,170 +181,71 @@
   const pillEl = el('#currentTopicPill');
   const searchEl = el('#search');
 
-  const oneBtn = el('#oneBtn');
-  const fiveBtn = el('#fiveBtn');
-  const anotherBtn = el('#anotherBtn');
-  const copyBtn = el('#copyBtn');
-  const shareBtn = el('#shareBtn');
-  const clearBtn = el('#clearBtn');
+  let state = { topic:null, lastBatch:[] };
 
-  const customForm = el('#customForm');
-  const customTopic = el('#customTopic');
-  const customFact = el('#customFact');
-
-  let state = {
-    topic: null,
-    lastBatch: []
-  };
-
-  const CUSTOM_KEY = 'stupidFacts.custom';
-  function getCustom(){ try { return JSON.parse(localStorage.getItem(CUSTOM_KEY) || '{}'); } catch { return {}; } }
-  function saveCustom(obj){ localStorage.setItem(CUSTOM_KEY, JSON.stringify(obj)); }
-
-  function topicsList(){
-    const builtIn = Object.keys(topicsData);
-    const custom = Object.keys(getCustom());
-    return [...new Set([...builtIn, ...custom])].sort((a,b)=>a.localeCompare(b));
-  }
-
+  function topicsList(){ return Object.keys(topicsData).sort(); }
   function renderTopics(filter=''){
-    topicsEl.innerHTML = '';
-    const list = topicsList().filter(t => t.toLowerCase().includes(filter.toLowerCase()));
-    if(list.length===0){ topicsEl.innerHTML = '<div class="empty" style="grid-column:1 / -1">No topics found.</div>'; return; }
-    for(const t of list){
-      const btn = document.createElement('button');
-      btn.className = 'topic';
-      btn.innerHTML = `<span class="emoji">${pickEmoji(t)}</span><span>${t}</span>`;
-      btn.addEventListener('click', ()=> selectTopic(t, btn));
+    topicsEl.innerHTML='';
+    const list=topicsList().filter(t=>t.toLowerCase().includes(filter.toLowerCase()));
+    if(list.length===0){ topicsEl.innerHTML='<div class="empty">No topics found.</div>'; return; }
+    list.forEach(t=>{
+      const btn=document.createElement('button');
+      btn.className='topic';
+      btn.innerHTML=`<span>${pickEmoji(t)}</span><span>${t}</span>`;
+      btn.onclick=()=>selectTopic(t,btn);
       topicsEl.appendChild(btn);
-    }
+    });
     markActive();
   }
-
-  function pickEmoji(topic){
-    const map={Space:'🪐',Animals:'🐙',History:'🏰',Food:'🌮',Tech:'💾',Weather:'⛅',Art:'🎨',Music:'🎵',Sports:'🏀',Geography:'🗺️',Inventions:'💡',Literature:'📚',Gaming:'🎮',Fashion:'🧢'};
-    return map[topic] || '✨';
+  function pickEmoji(t){
+    const map={Space:'🪐',Animals:'🐙',Food:'🌮',Tech:'💾',History:'🏰','Weird Science':'🧪',Dreams:'💤'};
+    return map[t]||'✨';
   }
-
-  function selectTopic(topic, btn){
-    state.topic = topic;
-    const hash = new URL(location);
-    hash.hash = `#${encodeURIComponent(topic)}`;
-    history.replaceState(null, '', hash);
-    pillEl.textContent = topic;
-    state.lastBatch = [];
-    emptyEl && (emptyEl.style.display = 'none');
-    factsEl.innerHTML = '';
-    markActive(btn);
+  function selectTopic(t,btn){
+    state.topic=t; pillEl.textContent=t; state.lastBatch=[]; factsEl.innerHTML=''; emptyEl.style.display='none'; markActive(btn);
   }
-
-  function markActive(btn){
-    document.querySelectorAll('.topic').forEach(b=>b.classList.remove('active'));
-    if(!btn && state.topic){
-      [...document.querySelectorAll('.topic')].find(b=>b.textContent.includes(state.topic))?.classList.add('active');
-    }else if(btn){ btn.classList.add('active'); }
-  }
-
-  function getFacts(topic){
-    const base = topicsData[topic] || [];
-    const custom = (getCustom()[topic] || []);
-    return [...base, ...custom];
-  }
-
-  function randomFacts(topic, count){
-    const pool = getFacts(topic);
-    if(pool.length===0) return [];
-    const copy = [...pool];
-    const out=[];
-    for(let i=0;i<count;i++){
-      if(copy.length===0) break;
-      const idx = Math.floor(Math.random()*copy.length);
-      out.push(copy.splice(idx,1)[0]);
-    }
-    return out;
-  }
-
+  function markActive(btn){ document.querySelectorAll('.topic').forEach(b=>b.classList.remove('active')); if(btn)btn.classList.add('active'); }
+  function randomFacts(t,n){ const pool=topicsData[t]||[]; return [...pool].sort(()=>.5-Math.random()).slice(0,n); }
   function showFacts(list){
-    if(!list || list.length===0){ factsEl.innerHTML = '<div class="empty">No facts available for this topic… yet.</div>'; return; }
-    const frag = document.createDocumentFragment();
-    list.forEach(f=>{
-      const div = document.createElement('div');
-      div.className='fact';
-      div.innerHTML = `${escapeHtml(f)} <span class="kinda-true">~ kinda true? ~</span>`;
-      frag.appendChild(div);
-    });
+    if(!list.length){ factsEl.innerHTML='<div class="empty">No facts yet.</div>'; return; }
+    const frag=document.createDocumentFragment();
+    list.forEach(f=>{ const d=document.createElement('div'); d.className='fact'; d.innerHTML=f+" <span class='kinda-true'>~ kinda true? ~</span>"; frag.appendChild(d); });
     factsEl.appendChild(frag);
   }
 
-  function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m])); }
+  // Controls
+  el('#oneBtn').onclick=()=>{ if(!state.topic)return alert('Pick topic'); const l=randomFacts(state.topic,1); state.lastBatch=l; showFacts(l); };
+  el('#fiveBtn').onclick=()=>{ if(!state.topic)return alert('Pick topic'); const l=randomFacts(state.topic,5); state.lastBatch=l; showFacts(l); };
+  el('#anotherBtn').onclick=()=>{ if(!state.topic)return alert('Pick topic'); factsEl.innerHTML=''; const l=randomFacts(state.topic,state.lastBatch.length||1); state.lastBatch=l; showFacts(l); };
 
-  function ensureTopic(){ if(!state.topic){ alert('Pick a topic first!'); return false;} return true; }
+  el('#copyBtn').onclick=()=>{
+    const text=[...document.querySelectorAll('.fact')].map(n=>n.textContent.replace('~ kinda true? ~','')).join('\n');
+    if(!text)return alert('Nothing to copy');
+    navigator.clipboard.writeText(text);
+    alert('Copied!');
+  };
 
-  oneBtn.addEventListener('click', ()=>{ if(!ensureTopic()) return; const list = randomFacts(state.topic,1); state.lastBatch=list; showFacts(list); });
-  fiveBtn.addEventListener('click', ()=>{ if(!ensureTopic()) return; const list = randomFacts(state.topic,5); state.lastBatch=list; showFacts(list); });
-  anotherBtn.addEventListener('click', ()=>{ if(!ensureTopic()) return; const n = Math.max(1, state.lastBatch.length||1); factsEl.innerHTML=''; const list=randomFacts(state.topic,n); state.lastBatch=list; showFacts(list); });
+  el('#shareBtn').onclick=()=>{
+    const text=[...document.querySelectorAll('.fact')].map(n=>`• ${n.textContent.replace('~ kinda true? ~','')}`).join('\n');
+    if(navigator.share)navigator.share({title:'Random Stupid Facts',text}); else alert(text);
+  };
 
-  copyBtn.addEventListener('click', async ()=>{
-    const text = [...document.querySelectorAll('.fact')].map(n=>n.textContent.replace('~ kinda true? ~','').trim()).join('\n');
-    if(!text){ alert('Nothing to copy yet.'); return; }
-    try{ await navigator.clipboard.writeText(text); toast('Copied!'); }catch{ alert('Copy failed.'); }
-  });
+  el('#exportBtn').onclick=()=>{
+    const text=[...document.querySelectorAll('.fact')].map(n=>n.textContent).join('\n');
+    if(!text)return alert('Nothing to export');
+    const blob=new Blob([text],{type:'text/plain'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='facts.txt'; a.click();
+  };
 
-  shareBtn.addEventListener('click', async ()=>{
-    const topic = state.topic || 'Random Stupid Facts';
-    const text = [...document.querySelectorAll('.fact')].map(n=>`• ${n.textContent.replace('~ kinda true? ~','').trim()}`).join('\n');
-    if(!text){ alert('Generate some facts first!'); return; }
-    const data = { title: 'Random Stupid Facts', text: text, url: location.href };
-    if(navigator.share){ try{ await navigator.share(data); } catch(e){ /* user cancelled */ } }
-    else { try{ await navigator.clipboard.writeText(`${topic} —\n${text}\n${location.href}`); toast('Copied to share!'); } catch{ alert('Sharing not supported.'); } }
-  });
+  el('#clearBtn').onclick=()=>{ factsEl.innerHTML=''; state.lastBatch=[]; emptyEl.style.display=''; };
 
-  clearBtn.addEventListener('click', ()=>{ factsEl.innerHTML=''; state.lastBatch=[]; emptyEl && (emptyEl.style.display=''); });
+  el('#search').oninput=()=>renderTopics(searchEl.value);
+  el('#randomTopicBtn').onclick=()=>{ const list=topicsList(); selectTopic(list[Math.floor(Math.random()*list.length)]); };
 
-  customForm.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const t = customTopic.value.trim(); const f = customFact.value.trim();
-    if(!t || !f) return;
-    const store = getCustom();
-    store[t] = store[t] || [];
-    store[t].push(f);
-    saveCustom(store);
-    customFact.value='';
-    renderTopics(searchEl.value);
-    selectTopic(t);
-    toast('Saved locally!');
-  });
+  // Keyboard shortcut (space = another fact)
+  document.body.onkeyup=(e)=>{ if(e.code==='Space'){ el('#anotherBtn').click(); } };
 
-  searchEl.addEventListener('input', ()=>{ renderTopics(searchEl.value); });
-
-  // Theme toggle
-  const toggle = document.getElementById('toggleTheme');
-  const THEME_KEY='stupidFacts.theme';
-  function applyTheme(t){ document.body.classList.toggle('light', t==='light'); }
-  applyTheme(localStorage.getItem(THEME_KEY)||'dark');
-  toggle.addEventListener('click', ()=>{
-    const t = document.body.classList.contains('light') ? 'dark' : 'light';
-    localStorage.setItem(THEME_KEY,t); applyTheme(t);
-  });
-
-  // URL hash topic
-  function initFromHash(){
-    const h = decodeURIComponent(location.hash.replace('#',''));
-    if(h && topicsList().includes(h)){ selectTopic(h); }
-  }
-
-  function toast(msg){
-    const t = document.createElement('div');
-    t.textContent = msg;
-    t.style.position='fixed'; t.style.bottom='18px'; t.style.left='50%'; t.style.transform='translateX(-50%)';
-    t.style.background='rgba(20,30,60,.95)'; t.style.border='1px solid rgba(255,255,255,.15)'; t.style.padding='10px 14px'; t.style.borderRadius='12px';
-    t.style.zIndex='9999'; t.style.boxShadow='var(--shadow)';
-    document.body.appendChild(t); setTimeout(()=>t.remove(),1200);
-  }
-
-  // Startup
   renderTopics();
-  initFromHash();
   </script>
 </body>
 </html>
