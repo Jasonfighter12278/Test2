@@ -19,7 +19,14 @@
       font-size: 2.5rem;
       margin-bottom: 15px;
     }
-    .buttons button {
+    .controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .buttons button, select {
       margin: 8px;
       padding: 10px 18px;
       border: none;
@@ -30,8 +37,8 @@
       background: #333;
       color: #fff;
     }
-    .buttons button:hover {
-      transform: scale(1.08);
+    .buttons button:hover, select:hover {
+      transform: scale(1.05);
       background: #444;
     }
     .buttons button.active {
@@ -44,11 +51,28 @@
       padding: 14px;
       background: #1e1e1e;
       border-radius: 12px;
-      max-width: 600px;
+      max-width: 650px;
       font-size: 1.2rem;
       opacity: 0;
       transform: scale(0.95);
       animation: popIn 0.4s forwards;
+      line-height: 1.4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .fact button {
+      margin-left: 10px;
+      background: none;
+      border: none;
+      color: #ff9800;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .fact button:hover {
+      transform: scale(1.3);
+      color: #ffc107;
     }
     @keyframes popIn {
       to {
@@ -56,11 +80,60 @@
         transform: scale(1);
       }
     }
+    #favorites {
+      margin-top: 40px;
+      text-align: left;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #favorites h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    #favorites button.export {
+      display: block;
+      margin: 10px auto 20px;
+      padding: 8px 14px;
+      background: #444;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      transition: all 0.2s ease;
+    }
+    #favorites button.export:hover {
+      background: #666;
+      transform: scale(1.05);
+    }
+    .favorite {
+      background: #2a2a2a;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .favorite button {
+      background: none;
+      border: none;
+      color: #ff4d4d;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .favorite button:hover {
+      transform: scale(1.2);
+      color: #ff6666;
+    }
     footer {
       margin-top: auto;
       padding: 15px;
       font-size: 0.9rem;
       color: #aaa;
+      text-align: center;
     }
     footer a {
       color: #ff9800;
@@ -74,15 +147,28 @@
 </head>
 <body>
   <h1>🤯 Random Dumb Facts</h1>
-  <div class="buttons">
-    <button id="oneFact">1 Fact</button>
-    <button id="fiveFacts">5 Facts</button>
-    <button id="anotherFact">Another</button>
+  
+  <div class="controls">
+    <div class="buttons">
+      <button id="oneFact">1 Fact</button>
+      <button id="fiveFacts">5 Facts</button>
+      <button id="anotherFact">Another</button>
+    </div>
+    <select id="categoryFilter">
+      <option value="All">All Categories</option>
+    </select>
   </div>
+
   <div id="factContainer"></div>
 
+  <div id="favorites">
+    <h2>⭐ Favorite Facts</h2>
+    <button class="export" id="exportFavorites">📂 Export Favorites</button>
+    <div id="favoriteList"></div>
+  </div>
+
   <footer>
-    <p>Created by iris. Inspired by gzao_pogs — <a href="#">Suggest a fact</a> | <a href="#">Export facts</a></p>
+    <p>Created by iris. Inspired by gzao_pogs. Not all facts are true. — <a href="#">Suggest a fact</a> | <a href="#">Export facts</a></p>
   </footer>
 
   <script>
@@ -90,39 +176,119 @@
     const oneBtn = document.getElementById('oneFact');
     const fiveBtn = document.getElementById('fiveFacts');
     const anotherBtn = document.getElementById('anotherFact');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const favoriteList = document.getElementById('favoriteList');
+    const exportBtn = document.getElementById('exportFavorites');
 
+    // === FACTS ===
     const categories = {
       Animals: [
-        "Sharks existed before trees.",
-        "Sloths can hold their breath longer than dolphins.",
-        "Cows have best friends and get stressed when separated."
+        "Sharks existed before trees.","Sloths can hold their breath longer than dolphins.",
+        "Cows have best friends and get stressed when separated.","A shrimp’s heart is in its head.",
+        "Frogs can freeze solid in winter and thaw back to life.","Sea otters hold hands while they sleep to avoid drifting apart.",
+        "A group of flamingos is called a 'flamboyance'.","Koalas have fingerprints almost identical to humans.",
+        "Pigeons can recognize themselves in a mirror.","Goats have rectangular pupils.",
+        "Penguins propose with pebbles.","A snail can sleep for 3 years.",
+        "Camels have three eyelids.","Rats and mice laugh when tickled.",
+        "Butterflies can taste with their feet.","Crows can hold grudges against humans.",
+        "Ostriches can run faster than horses.","Male seahorses give birth.","Parrots can learn hundreds of words."
       ],
       Food: [
-        "Bananas are berries but strawberries aren’t.",
-        "Honey never spoils—archaeologists have eaten 3000-year-old honey.",
-        "Ketchup was once sold as medicine."
+        "Bananas are berries but strawberries aren’t.","Honey never spoils—archaeologists have eaten 3000-year-old honey.",
+        "Ketchup was once sold as medicine.","Pineapples take up to 2 years to grow.","Apples float because they are 25% air.",
+        "Peanuts aren’t nuts, they’re legumes.","Worcestershire sauce contains anchovies.","The world’s most expensive pizza costs over $12,000.",
+        "Carrots were originally purple, not orange.","Cotton candy was invented by a dentist.","Potatoes were the first food grown in space.",
+        "Almonds are seeds, not nuts.","Coffee beans are actually seeds of a cherry.","Ripe cranberries bounce like rubber balls.",
+        "Most wasabi is just horseradish dyed green.","Chewing gum stays in your stomach for 7 years is a myth.",
+        "Lobsters used to be prison food.","Popsicles were invented by an 11-year-old.","Milk was once more valuable than gold."
       ],
       Weird: [
-        "Wombat poop is cube-shaped.",
-        "Octopuses have three hearts.",
-        "There’s a species of jellyfish that is immortal."
+        "Wombat poop is cube-shaped.","Octopuses have three hearts.","There’s a species of jellyfish that is immortal.",
+        "Sharks can live for over 400 years.","Your stomach gets a new lining every 3-4 days.",
+        "There are more plastic flamingos in the U.S. than real ones.","The inventor of the Pringles can was buried in one.",
+        "Scotland has 421 words for snow.","Some turtles can breathe through their butts.",
+        "Banana plants are technically herbs.","A single strand of spaghetti is called a spaghetto.",
+        "In Japan, letting a sumo wrestler make your baby cry is considered good luck.","The first oranges weren’t orange—they were green.",
+        "There’s a town in Norway where it’s illegal to die.","In France, it’s legal to marry a dead person.",
+        "Some cats are allergic to humans.","Kangaroos can’t walk backwards."
+      ],
+      History: [
+        "Napoleon was once attacked by a horde of bunnies.","Cleopatra lived closer in time to the moon landing than the pyramids.",
+        "Oxford University is older than the Aztec Empire.","The Great Fire of London killed only 6 people.",
+        "In medieval times, animals could be put on trial.","Albert Einstein was offered the presidency of Israel (he declined).",
+        "Ancient Romans used urine to whiten their teeth.","Abraham Lincoln was a licensed bartender.","Before erasers, bread was used to remove pencil marks.",
+        "Pirates wore earrings because they believed it improved eyesight.","The Olympic Games used to award medals for art and poetry.",
+        "In Ancient Egypt, servants were covered in honey to keep flies off the pharaoh.","George Washington loved ice cream.",
+        "The shortest war in history lasted 38 minutes.","The Eiffel Tower can grow taller in summer from heat expansion."
+      ],
+      Science: [
+        "Water can boil and freeze at the same time (triple point).","Bananas are slightly radioactive.",
+        "There’s enough DNA in your body to stretch to the sun and back 600 times.","If you could fold a piece of paper 42 times, it would reach the moon.",
+        "Hot water can freeze faster than cold water (the Mpemba effect).","Saturn could float in water—it’s less dense than H2O.",
+        "There are more atoms in a glass of water than glasses of water in all the oceans on Earth.","Light from the Sun takes about 8 minutes to reach Earth.",
+        "A day on Venus is longer than a year on Venus.","The human brain has more connections than there are stars in our galaxy.",
+        "Antimatter is the most expensive substance on Earth.","Sound travels faster through steel than air.",
+        "A teaspoon of honey is the life’s work of 12 bees.","Your body has enough carbon to make 900 pencils.","An octopus has nine brains.",
+        "Diamonds can form inside gas giants like Jupiter."
+      ],
+      HumanBody: [
+        "Your stomach acid is strong enough to dissolve razor blades.","Your bones are about 5 times stronger than steel of the same weight.",
+        "The average person produces enough saliva to fill 2 swimming pools in a lifetime.","Your body has more bacteria cells than human cells.",
+        "Your tongue print is unique, just like your fingerprint.","The human nose can detect over a trillion scents.",
+        "Your ears never stop growing.","Goosebumps are a leftover survival reflex from our hairy ancestors.","Your pinky finger contributes to 50% of your hand’s strength.",
+        "Blood makes up about 8% of your body weight.","You blink about 15–20 times a minute.","Your heart beats about 100,000 times per day.",
+        "You shed about 1.5 pounds of skin each year.","Your liver can regenerate itself completely.","Babies have around 300 bones, adults have 206.",
+        "You grow faster in the morning than at night.","Your fingernails grow faster on your dominant hand."
+      ],
+      Space: [
+        "Neutron stars are so dense that a teaspoon would weigh billions of tons.","There’s a giant cloud of alcohol floating in space.",
+        "One day on Mercury lasts 1,408 hours.","Some galaxies are moving away from us faster than the speed of light.",
+        "The footprints on the Moon will last millions of years.","Saturn’s moon Titan has lakes of liquid methane.",
+        "The universe is still expanding every second.","Black holes can slow down time.","Astronauts grow up to 2 inches taller in space.",
+        "Venus rotates backwards compared to most planets.","Pluto is smaller than the United States.",
+        "Mars has the largest volcano in the solar system.","The sun accounts for 99.8% of the solar system’s mass.",
+        "A day on Jupiter lasts only 10 hours.","If two pieces of the same metal touch in space, they fuse permanently."
+      ],
+      Random: [
+        "The dot over the letter 'i' is called a tittle.","There’s a word for the fear of long words: hippopotomonstrosesquippedaliophobia.",
+        "The inventor of the frisbee was turned into a frisbee after he died.","Bubble wrap was originally intended to be wallpaper.",
+        "There’s a basketball court in the U.S. Supreme Court building—it’s called the 'Highest Court in the Land'.",
+        "The first alarm clock could only ring at 4 a.m.","You can’t hum while holding your nose.","The longest hiccup attack lasted 68 years.",
+        "In Switzerland, it’s illegal to own just one guinea pig.","An octopus can taste with its arms.","The word 'set' has the most definitions in English.",
+        "Fortune cookies were invented in America, not China.","There’s a McDonald’s on every continent except Antarctica.",
+        "A jiffy is an actual unit of time: 1/100th of a second.","The inventor of velcro got the idea from burrs sticking to his dog.",
+        "Shakespeare invented over 1,700 words."
       ]
     };
 
+    // === SETUP ===
+    Object.keys(categories).forEach(cat => {
+      const option = document.createElement("option");
+      option.value = cat;
+      option.textContent = cat;
+      categoryFilter.appendChild(option);
+    });
+
     function getRandomFact() {
-      const keys = Object.keys(categories);
-      const category = keys[Math.floor(Math.random() * keys.length)];
-      const factList = categories[category];
+      let chosenCategory = categoryFilter.value;
+      let keys = Object.keys(categories);
+      if (chosenCategory === "All") {
+        chosenCategory = keys[Math.floor(Math.random() * keys.length)];
+      }
+      const factList = categories[chosenCategory];
       const fact = factList[Math.floor(Math.random() * factList.length)];
-      return `${fact}`;
+      return { category: chosenCategory, fact };
     }
 
     function showFacts(count) {
-      factContainer.innerHTML = ""; // clear old facts
+      factContainer.innerHTML = "";
       for (let i = 0; i < count; i++) {
+        const { category, fact } = getRandomFact();
         const factEl = document.createElement('div');
         factEl.className = 'fact';
-        factEl.textContent = getRandomFact();
+        factEl.innerHTML = `<span>${category}: ${fact}</span>
+                            <button title="Save to favorites">⭐</button>`;
+        factEl.querySelector("button").addEventListener("click", () => saveFavorite(`${category}: ${fact}`));
         factContainer.appendChild(factEl);
       }
     }
@@ -132,31 +298,61 @@
       button.classList.add('active');
     }
 
-    oneBtn.addEventListener('click', () => {
-      showFacts(1);
-      setActive(oneBtn);
-    });
-
-    fiveBtn.addEventListener('click', () => {
-      showFacts(5);
-      setActive(fiveBtn);
-    });
-
-    anotherBtn.addEventListener('click', () => {
-      showFacts(1);
-      setActive(anotherBtn);
-    });
-
-    // spacebar shortcut for another fact
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        showFacts(1);
-        setActive(anotherBtn);
+    // === FAVORITES ===
+    function saveFavorite(fact) {
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      if (!favorites.includes(fact)) {
+        favorites.push(fact);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        renderFavorites();
       }
-    });
+    }
 
-    // default load
+    function removeFavorite(fact) {
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      favorites = favorites.filter(f => f !== fact);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      renderFavorites();
+    }
+
+    function renderFavorites() {
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      favoriteList.innerHTML = "";
+      favorites.forEach(fact => {
+        const favEl = document.createElement("div");
+        favEl.className = "favorite";
+        favEl.innerHTML = `<span>${fact}</span>
+                           <button title="Remove">✖</button>`;
+        favEl.querySelector("button").addEventListener("click", () => removeFavorite(fact));
+        favoriteList.appendChild(favEl);
+      });
+    }
+
+    function exportFavorites() {
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      if (favorites.length === 0) {
+        alert("No favorites to export!");
+        return;
+      }
+      const blob = new Blob([favorites.join("\n")], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "favorites.txt";
+      link.click();
+    }
+
+    // === EVENTS ===
+    oneBtn.addEventListener('click', () => { showFacts(1); setActive(oneBtn); });
+    fiveBtn.addEventListener('click', () => { showFacts(5); setActive(fiveBtn); });
+    anotherBtn.addEventListener('click', () => { showFacts(1); setActive(anotherBtn); });
+    categoryFilter.addEventListener("change", () => { showFacts(1); setActive(oneBtn); });
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') { e.preventDefault(); showFacts(1); setActive(anotherBtn); }
+    });
+    exportBtn.addEventListener("click", exportFavorites);
+
+    // === INIT ===
+    renderFavorites();
     showFacts(1);
     setActive(oneBtn);
   </script>
